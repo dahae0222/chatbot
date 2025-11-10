@@ -131,7 +131,7 @@ def initialize_components(selected_model):
     return rag_chain
 
 # Streamlit UI
-st.header("공동탐구 데이터를 기반으로한 열섬현상 분석 챗봇봇")
+st.header("공동탐구 데이터를 기반으로한 열섬현상 분석 챗봇")
 
 # 첫 실행 안내 메시지
 if not os.path.exists("./chroma_db"):
