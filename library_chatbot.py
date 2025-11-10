@@ -130,15 +130,33 @@ def initialize_components(selected_model):
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
     return rag_chain
 
-# Streamlit UI
-st.header("공동탐구 데이터를 기반으로한 열섬 데이터 분석 챗봇")
+# --- Streamlit UI 시작 ---
 
-# 첫 실행 안내 메시지
+# 1. 헤더에 이모지 추가 및 열섬 현상 이미지 데코레이션
+st.header("🔥 공동탐구 데이터를 기반으로한 열섬 데이터 분석 챗봇 🌡️")
+st.markdown("---") # 시각적 구분선
+
+# 2. 열섬 개념 이미지 삽입 (이미지 파일을 스크립트와 같은 경로에 준비해야 합니다)
+st.image("urban_heat_island_concept.png", caption="🔥 도시 열섬 현상 개념도", use_column_width=True)
+st.markdown("---") 
+
+
+# 3. 사이드바에 추가 정보 및 데코레이션
+with st.sidebar:
+    st.subheader("💡 열섬 분석 봇 정보")
+    st.write("본 챗봇은 제공된 PDF 자료를 기반으로 질문에 답변합니다.")
+    # 4. 열섬 관련 위성 이미지 또는 그래프 삽입
+    st.image("satellite_heat_map.jpg", caption="🌡️ 지역별 열섬 히트맵 (자료 예시)")
+    st.markdown("---")
+    st.info("🔍 질문하실 때 '열섬', '온도', '데이터' 등의 키워드를 포함하면 정확도가 높습니다.")
+
+
+# 첫 실행 안내 메시지 (이모지 추가)
 if not os.path.exists("./chroma_db"):
-    st.info("🔄 첫 실행입니다. 임베딩 모델 다운로드 및 PDF 처리 중... (약 5-7분 소요)")
-    st.info("💡 이후 실행에서는 10-15초만 걸립니다!")
+    st.info("🔄 첫 실행입니다. 임베딩 모델 다운로드 및 PDF 처리 중... (약 5-7분 소요) ⏳")
+    st.info("💡 이후 실행에서는 10-15초만 걸립니다! 🚀")
 
-# Gemini 모델 선택 - 최신 2.x 모델 사용
+# Gemini 모델 선택
 option = st.selectbox("Select Gemini Model",
     ("gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash-exp"),
     index=0,
@@ -148,7 +166,7 @@ option = st.selectbox("Select Gemini Model",
 try:
     with st.spinner("🔧 챗봇 초기화 중... 잠시만 기다려주세요"):
         rag_chain = initialize_components(option)
-    st.success("✅ 챗봇이 준비되었습니다!")
+    st.success("✅ 챗봇이 준비되었습니다! 궁금한 점을 질문해주세요.")
 except Exception as e:
     st.error(f"⚠️ 초기화 중 오류 발생: {str(e)}")
     st.info("PDF 파일 경로와 API 키를 확인해주세요.")
@@ -167,7 +185,7 @@ conversational_rag_chain = RunnableWithMessageHistory(
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", 
-                                     "content": "국립부경대 도서관 규정에 대해 무엇이든 물어보세요!!!!!"}]
+                                     "content": "안녕하세요! 🙋‍♀️ 공동탐구 열섬 데이터에 대해 무엇이든 물어보세요!"}]
 
 for msg in chat_history.messages:
     st.chat_message(msg.type).write(msg.content)
